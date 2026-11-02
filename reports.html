@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Reports — Dream Car Brokers</title>
+<script>document.documentElement.dataset.theme = (function(){ try { return localStorage.getItem("dcb_theme") || "light"; } catch(e) { return "light"; } })();</script>
+<link rel="stylesheet" href="assets/dcb.css" />
+<script src="assets/store.js"></script>
+<script src="assets/chrome.js"></script>
+<style>
+  .report-meta { display: flex; gap: 40px; flex-wrap: wrap; padding: 18px 22px; border-bottom: 1px solid var(--hairline); }
+  .rm-item {}
+  .rm-lbl { font-size: 9px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  .rm-val { font-size: 13px; margin-top: 3px; }
+  .report-section { margin-top: 24px; }
+</style>
+</head>
+<body>
+
+<div id="chrome"></div>
+
+<main class="wrap">
+
+  <div class="page-head">
+    <div>
+      <div class="overline">Reporting</div>
+      <div class="page-title">Portfolio Statement</div>
+      <div class="page-sub">Consolidated statement of vehicles under management. Suitable for family-office and trustee reporting.</div>
+    </div>
+    <div class="page-head-actions">
+      <button class="btn-navy" onclick="window.print()">Print / Save as PDF</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="report-meta">
+      <div class="rm-item"><div class="rm-lbl">Statement Reference</div><div class="rm-val" id="refNo"></div></div>
+      <div class="rm-item"><div class="rm-lbl">Statement Date</div><div class="rm-val" id="stmtDate"></div></div>
+      <div class="rm-item"><div class="rm-lbl">Reporting Currency</div><div class="rm-val">Pounds Sterling (GBP)</div></div>
+      <div class="rm-item"><div class="rm-lbl">Basis</div><div class="rm-val">Indicative market value</div></div>
+      <div class="rm-item"><div class="rm-lbl">Prepared By</div><div class="rm-val">Dream Car Brokers Ltd</div></div>
+    </div>
+    <div class="stat-strip" id="statStrip" style="border:none;border-top:1px solid var(--hairline)"></div>
+  </div>
+
+  <div class="report-section panel">
+    <div class="panel-head">
+      <div class="panel-title">Holdings by Category</div>
+      <div class="panel-note">Aggregated by market segment</div>
+    </div>
+    <div class="table-scroll">
+      <table class="registry">
+        <thead>
+          <tr><th>Category</th><th class="num">Vehicles</th><th class="num">Acquisition Basis</th><th class="num">Valuation</th><th class="num">Unrealised</th><th class="num">Annual TCO</th><th class="num">Share of AUM</th></tr>
+        </thead>
+        <tbody id="catBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="report-section panel">
+    <div class="panel-head">
+      <div class="panel-title">Classic &amp; Vintage — Holdings by Era</div>
+      <div class="panel-note">Market-standard era classification</div>
+    </div>
+    <div class="table-scroll">
+      <table class="registry">
+        <thead>
+          <tr><th>Era</th><th class="num">Vehicles</th><th class="num">Valuation</th><th class="num">Unrealised</th></tr>
+        </thead>
+        <tbody id="eraBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="report-section panel">
+    <div class="panel-head">
+      <div class="panel-title">Cost of Ownership Summary</div>
+      <div class="panel-note">Annual operating expenditure across the portfolio</div>
+    </div>
+    <div class="table-scroll">
+      <table class="registry">
+        <thead>
+          <tr><th>Expense Line</th><th class="num">Annual (GBP)</th><th class="num">Share</th></tr>
+        </thead>
+        <tbody id="tcoBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="report-section panel">
+    <div class="panel-head">
+      <div class="panel-title">Title &amp; Encumbrance Schedule</div>
+      <div class="panel-note">Compliance position at statement date</div>
+    </div>
+    <div class="table-scroll">
+      <table class="registry">
+        <thead>
+          <tr><th>Asset</th><th>Client Entity</th><th class="num">Valuation</th><th>Title Status</th><th>Action Required</th></tr>
+        </thead>
+        <tbody id="titleBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="foot"></div>
+</main>
+
+<script src="assets/reports.js"></script>
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Asset Register — Dream Car Brokers</title>
+<script>document.documentElement.dataset.theme = (function(){ try { return localStorage.getItem("dcb_theme") || "light"; } catch(e) { return "light"; } })();</script>
+<link rel="stylesheet" href="assets/dcb.css" />
+<script src="assets/store.js"></script>
+<script src="assets/chrome.js"></script>
+</head>
+<body>
+
+<div id="chrome"></div>
+
+<main class="wrap">
+
+  <div class="page-head">
+    <div>
+      <div class="overline">Holdings &amp; Compliance</div>
+      <div class="page-title">Asset Register</div>
+      <div class="page-sub">Complete record of vehicles under management, with title verification and cost of ownership.</div>
+    </div>
+    <div class="page-head-actions">
+      <button class="btn-outline" onclick="exportCSV()">Export CSV</button>
+      <button class="btn-navy" onclick="openModal()">Register Asset</button>
+    </div>
+  </div>
+
+  <!-- SUMMARY STRIP -->
+  <div class="stat-strip" id="summaryStrip" style="margin-bottom:24px"></div>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <div class="f-group" style="flex:1;min-width:180px">
+      <span class="f-label">Search</span>
+      <input class="f-input" id="fSearch" placeholder="Marque, model, client, chassis…" oninput="applyFilters()" style="width:100%" />
+    </div>
+    <div class="f-group">
+      <span class="f-label">Category</span>
+      <select class="f-select" id="fCategory" onchange="applyFilters()">
+        <option value="all">All categories</option>
+        <option value="Hypercar">Hypercar</option>
+        <option value="Supercar">Supercar</option>
+        <option value="Classic & Vintage">Classic &amp; Vintage</option>
+      </select>
+    </div>
+    <div class="f-group">
+      <span class="f-label">Era</span>
+      <select class="f-select" id="fEra" onchange="applyFilters()">
+        <option value="all">All eras</option>
+        <option value="prewar">Pre-War &amp; Vintage Veterans (1900–1939)</option>
+        <option value="postwar">Post-War Blue-Chip Legends (1950s–1960s)</option>
+        <option value="analogue">Analogue Supercars &amp; Poster Icons (1970s–1980s)</option>
+        <option value="modern">Modern Collectibles (1990–)</option>
+      </select>
+    </div>
+    <div class="f-group">
+      <span class="f-label">Value from</span>
+      <select class="f-select" id="fMin" onchange="applyFilters()">
+        <option value="0">No minimum</option>
+        <option value="500000">£500,000</option>
+        <option value="1000000">£1,000,000</option>
+        <option value="2000000">£2,000,000</option>
+        <option value="5000000">£5,000,000</option>
+        <option value="10000000">£10,000,000</option>
+      </select>
+    </div>
+    <div class="f-group">
+      <span class="f-label">Value to</span>
+      <select class="f-select" id="fMax" onchange="applyFilters()">
+        <option value="0">No maximum</option>
+        <option value="1000000">£1,000,000</option>
+        <option value="2000000">£2,000,000</option>
+        <option value="5000000">£5,000,000</option>
+        <option value="10000000">£10,000,000</option>
+        <option value="20000000">£20,000,000</option>
+      </select>
+    </div>
+    <div class="f-group">
+      <span class="f-label">Title</span>
+      <select class="f-select" id="fTitle" onchange="applyFilters()">
+        <option value="all">All</option>
+        <option value="clear">Clear title</option>
+        <option value="financed">Encumbered</option>
+      </select>
+    </div>
+    <button class="f-clear" onclick="clearFilters()">Reset</button>
+  </div>
+
+  <!-- REGISTER TABLE -->
+  <div class="panel">
+    <div class="panel-head">
+      <div class="panel-title">Vehicles Under Management</div>
+      <div class="panel-note" id="resultNote"></div>
+    </div>
+    <div class="table-scroll">
+      <table class="registry">
+        <thead>
+          <tr>
+            <th>Asset</th>
+            <th>Era</th>
+            <th>Category</th>
+            <th>Client</th>
+            <th class="num">Acquisition</th>
+            <th class="num">Valuation</th>
+            <th class="num">Return</th>
+            <th class="num">Annual TCO</th>
+            <th>Title</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="registerBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="foot"></div>
+</main>
+
+<!-- DETAIL DRAWER -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<aside class="drawer" id="drawer" aria-label="Asset detail">
+  <div class="drawer-head">
+    <span class="drawer-ref" id="drawerRef">Asset File</span>
+    <button class="drawer-close" onclick="closeDrawer()" aria-label="Close">✕</button>
+  </div>
+  <div class="drawer-body" id="drawerBody"></div>
+</aside>
+
+<!-- REGISTER ASSET MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title">Register Asset</div>
+        <div class="panel-note">New vehicle instruction — all figures in GBP</div>
+      </div>
+      <button class="drawer-close" onclick="closeModal()" aria-label="Close">✕</button>
+    </div>
+    <form id="assetForm" onsubmit="saveAsset(event)">
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="field"><label for="aMake">Marque *</label><input id="aMake" required placeholder="Ferrari" /></div>
+          <div class="field"><label for="aModel">Model *</label><input id="aModel" required placeholder="275 GTB/4" /></div>
+          <div class="field"><label for="aYear">Year *</label><input id="aYear" required type="number" min="1900" max="2027" placeholder="1967" /></div>
+          <div class="field"><label for="aCategory">Category *</label>
+            <select id="aCategory" required>
+              <option value="Hypercar">Hypercar</option>
+              <option value="Supercar">Supercar</option>
+              <option value="Classic & Vintage">Classic &amp; Vintage</option>
+            </select>
+          </div>
+          <div class="field"><label for="aClient">Client / Entity *</label><input id="aClient" required placeholder="Family office or private client" /></div>
+          <div class="field"><label for="aVin">Chassis / VIN</label><input id="aVin" placeholder="Optional" /></div>
+          <div class="field"><label for="aFuel">Fuel Type</label>
+            <select id="aFuel">
+              <option>Petrol</option>
+              <option>Diesel</option>
+              <option>Hybrid</option>
+              <option>Electric</option>
+              <option>Petrol (race specification)</option>
+            </select>
+          </div>
+          <div class="field"><label for="aEngine">Engine</label><input id="aEngine" placeholder="6.1 L V12" /></div>
+          <div class="field"><label for="aTrans">Transmission</label><input id="aTrans" placeholder="6-speed manual" /></div>
+          <div class="field"><label for="aMileage">Recorded Mileage</label><input id="aMileage" placeholder="17,900 km" /></div>
+          <div class="field full"><label for="aColour">Colour Specification</label><input id="aColour" placeholder="Exterior over interior" /></div>
+          <div class="field"><label for="aPurchase">Acquisition Cost *</label><input id="aPurchase" required type="number" min="0" step="1000" placeholder="2150000" /></div>
+          <div class="field"><label for="aCurrent">Current Valuation *</label><input id="aCurrent" required type="number" min="0" step="1000" placeholder="2680000" /></div>
+          <div class="field full"><label for="aTitle">Title Status *</label>
+            <select id="aTitle" required>
+              <option value="clear">Clear title — no outstanding finance</option>
+              <option value="financed">Encumbered — finance or lien registered</option>
+            </select>
+          </div>
+
+          <div class="field"><label for="cIns">Insurance (annual)</label><input id="cIns" type="number" min="0" step="100" placeholder="18500" /></div>
+          <div class="field"><label for="cStore">Storage (annual)</label><input id="cStore" type="number" min="0" step="100" placeholder="8400" /></div>
+          <div class="field"><label for="cTrans">Transport (annual)</label><input id="cTrans" type="number" min="0" step="100" placeholder="6200" /></div>
+          <div class="field"><label for="cMaint">Maintenance (annual)</label><input id="cMaint" type="number" min="0" step="100" placeholder="15600" /></div>
+
+          <div class="field full"><label for="aProv">Provenance &amp; Notes</label><textarea id="aProv" placeholder="History file, certification, restoration record, ownership chain…"></textarea></div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn-outline" onclick="closeModal()">Cancel</button>
+        <button type="submit" class="btn-navy">Add to Register</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast">Asset added to register</div>
+
+<script src="assets/register.js"></script>
+</body>
+</html>

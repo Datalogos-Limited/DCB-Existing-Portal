@@ -1,0 +1,160 @@
+{
+  "source": "https://vermillion-speculoos-720254.netlify.app/",
+  "retrieved": "2026-11-02T14:04:16.733612+00:00",
+  "files": {
+    "https://vermillion-speculoos-720254.netlify.app/index.html": {
+      "path": "index.html",
+      "bytes": 9266,
+      "sha256": "5b8cfb6ffdd1293781fbb468c1a5fe352a7a68348668e8e3326e6db4398227d5"
+    },
+    "https://vermillion-speculoos-720254.netlify.app/portfolio.html": {
+      "path": "portfolio.html",
+      "bytes": 9274,
+      "sha256": "090f8829b57ac69b7eca88fd3fa261efac007f81c7843125aedb64c545b9b8d3"
+    },
+    "https://vermillion-speculoos-720254.netlify.app/intel.html": {
+      "path": "intel.html",
+      "bytes": 9071,
+      "sha256": "1894ce9acce371770294d54c202a2bccaded8db984e3877ac8f479a8432a3dc1"
+    },
+    "https://vermillion-speculoos-720254.netlify.app/clients.html": {
+      "path": "clients.html",
+      "bytes": 1686,
+      "sha256": "65ac9a8d2fab828e12688a970f77089e982dfc7f4708a16c6951f974e7190304"
+    },
+    "https://vermillion-speculoos-720254.netlify.app/vault.html": {
+      "path": "vault.html",
+      "bytes": 5175,
+      "sha256": "8f1b7e5751de46d3608d41d8d8c4fa4f846ecd074cb64c663ee9d58f16352bd6"
+    },
+    "https://vermillion-speculoos-720254.netlify.app/concierge.html": {
+      "path": "concierge.html",
+      "bytes": 6700,
+      "sha256": "759b6fb08494caf4a48d6e0582e96055d17dafdccd02c966d573f42d1e3526cb"
+    },
+    "https://vermillion-speculoos-720254.netlify.app/reports.html": {
+      "path": "reports.html",
+      "bytes": 4318,
+      "sha256": "329f1625b9fd71c805dae4269d14b2b72447fad267e1f839efb641c81a1048df"
+    },
+    "https://vermillion-speculoos-720254.netlify.app/assets/dcb.css": {
+      "path": "assets/dcb.css",
+      "bytes": 16417,
+      "sha256": "b2a165a9679c5f21adf195c2a6261cb8ba9b3be8729aff0fd7bd05f536c83777"
+    },
+    "https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js": {
+      "path": "vendor/cdn.jsdelivr.net/c389a6a6491c.js",
+      "bytes": 205637,
+      "sha256": "d46d97a1fd022c5fb29fa2f45ebcbc32202d73aeebf076ce5f7248f5498fc7d7"
+    },
+    "https://vermillion-speculoos-720254.netlify.app/assets/store.js": {
+      "path": "assets/store.js",
+      "bytes": 12717,
+      "sha256": "6d1062bd7e09069b5a98dfbca44fcd850f4227b662105cc0c0b7449fee54cbdf"
+    },
+    "https://vermillion-speculoos-720254.netlify.app/assets/chrome.js": {
+      "path": "assets/chrome.js",
+      "bytes": 4426,
+      "sha256": "601c328bd644644bb75e320f92b2bcd1d8ca6580461425b5db87238521c6f636"
+    },
+    "https://vermillion-speculoos-720254.netlify.app/reports": {
+      "path": "reports.html",
+      "bytes": 4318,
+      "sha256": "329f1625b9fd71c805dae4269d14b2b72447fad267e1f839efb641c81a1048df"
+    },
+    "https://vermillion-speculoos-720254.netlify.app/portfolio?add=1": {
+      "path": "portfolio.html",
+      "bytes": 9274,
+      "sha256": "090f8829b57ac69b7eca88fd3fa261efac007f81c7843125aedb64c545b9b8d3"
+    },
+    "https://vermillion-speculoos-720254.netlify.app/portfolio": {
+      "path": "portfolio.html",
+      "bytes": 9274,
+      "sha256": "090f8829b57ac69b7eca88fd3fa261efac007f81c7843125aedb64c545b9b8d3"
+    },
+    "https://vermillion-speculoos-720254.netlify.app/intel": {
+      "path": "intel.html",
+      "bytes": 9071,
+      "sha256": "1894ce9acce371770294d54c202a2bccaded8db984e3877ac8f479a8432a3dc1"
+    },
+    "https://vermillion-speculoos-720254.netlify.app/assets/overview.js": {
+      "path": "assets/overview.js",
+      "bytes": 7198,
+      "sha256": "22dc571ed785276671725c0927e1e7b79080a94684c2c25a69c5bdc2e86217e5"
+    },
+    "https://vermillion-speculoos-720254.netlify.app/assets/register.js": {
+      "path": "assets/register.js",
+      "bytes": 15698,
+      "sha256": "92fe54918a236783d43ae3f3e036fb3075d860bd4cb26c2faa65c6c3405e86e1"
+    },
+    "https://vermillion-speculoos-720254.netlify.app/assets/intel.js": {
+      "path": "assets/intel.js",
+      "bytes": 9372,
+      "sha256": "0cbb626efd158cd531ebe56922c62134c72eeb6737b2afcc2b72a6f7f41cb61e"
+    },
+    "https://vermillion-speculoos-720254.netlify.app/assets/clients.js": {
+      "path": "assets/clients.js",
+      "bytes": 3287,
+      "sha256": "6ab99d191d68474e9e69f9535d0c6681ce26e0b4c026684063b045b772967722"
+    },
+    "https://vermillion-speculoos-720254.netlify.app/assets/vault.js": {
+      "path": "assets/vault.js",
+      "bytes": 5521,
+      "sha256": "d1439d1226d8726c673b23d6bc534d9e704d0fbd9ffea74b9ad28a10f3815dbb"
+    },
+    "https://vermillion-speculoos-720254.netlify.app/assets/concierge.js": {
+      "path": "assets/concierge.js",
+      "bytes": 2943,
+      "sha256": "a87da78605cf7720b330a0334a01d4c7e78c53346d584b1360fd131ff4af8591"
+    },
+    "https://vermillion-speculoos-720254.netlify.app/assets/reports.js": {
+      "path": "assets/reports.js",
+      "bytes": 4636,
+      "sha256": "475bb3e7418ef63bc381af26228b3964cde31634475b68593e4bb13162877802"
+    },
+    "https://vermillion-speculoos-720254.netlify.app/login.html": {
+      "path": "login.html",
+      "bytes": 6091,
+      "sha256": "5b7d3d4c32e304bbf480ee41f4d7ada64a15253414890dda3dcbcaaa9a880015"
+    },
+    "https://identity.netlify.com/v1/netlify-identity-widget.js": {
+      "path": "vendor/identity.netlify.com/7aff380576e2.js",
+      "bytes": 240416,
+      "sha256": "466954df58db08e3c508d1442f9b986738f2fafa52fa28a58cdfa855fa5f54c1"
+    }
+  },
+  "failures": [
+    {
+      "url": "https://vermillion-speculoos-720254.netlify.app/assets/index.html",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://vermillion-speculoos-720254.netlify.app/assets/portfolio.html",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://vermillion-speculoos-720254.netlify.app/assets/intel.html",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://vermillion-speculoos-720254.netlify.app/assets/clients.html",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://vermillion-speculoos-720254.netlify.app/assets/vault.html",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://vermillion-speculoos-720254.netlify.app/assets/concierge.html",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://vermillion-speculoos-720254.netlify.app/assets/reports.html",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://vermillion-speculoos-720254.netlify.app/assets/vault.html?asset=",
+      "error": "HTTP Error 404: Not Found"
+    }
+  ]
+}

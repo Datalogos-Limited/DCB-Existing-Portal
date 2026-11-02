@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Document Vault — Dream Car Brokers</title>
+<script>document.documentElement.dataset.theme = (function(){ try { return localStorage.getItem("dcb_theme") || "light"; } catch(e) { return "light"; } })();</script>
+<link rel="stylesheet" href="assets/dcb.css" />
+<script src="assets/store.js"></script>
+<script src="assets/chrome.js"></script>
+<style>
+  .doc-icon {
+    width: 30px; height: 36px; flex-shrink: 0;
+    border: 1px solid var(--hairline-dark);
+    background: var(--panel-tint);
+    position: relative;
+  }
+  .doc-icon::after {
+    content: ''; position: absolute; top: 0; right: 0;
+    width: 9px; height: 9px;
+    background: var(--paper);
+    border-left: 1px solid var(--hairline-dark);
+    border-bottom: 1px solid var(--hairline-dark);
+  }
+  .doc-cell { display: flex; align-items: center; gap: 12px; }
+  .doc-name { font-weight: 600; color: var(--ink); white-space: normal; max-width: 340px; }
+  .file-note { font-size: 10px; color: var(--muted-2); margin-top: 6px; letter-spacing: 0.03em; }
+</style>
+</head>
+<body>
+
+<div id="chrome"></div>
+
+<main class="wrap">
+
+  <div class="page-head">
+    <div>
+      <div class="overline">Records &amp; Compliance</div>
+      <div class="page-title">Document Vault</div>
+      <div class="page-sub">Title documents, certificates, and reports held against each vehicle. Originals are retained in physical custody.</div>
+    </div>
+    <div class="page-head-actions">
+      <button class="btn-navy" onclick="openUpload()">Lodge Document</button>
+    </div>
+  </div>
+
+  <div class="stat-strip" id="statStrip" style="margin-bottom:24px"></div>
+
+  <div class="filter-bar">
+    <div class="f-group" style="flex:1;min-width:180px">
+      <span class="f-label">Search</span>
+      <input class="f-input" id="fSearch" placeholder="Document name…" oninput="renderDocs()" style="width:100%" />
+    </div>
+    <div class="f-group">
+      <span class="f-label">Vehicle</span>
+      <select class="f-select" id="fAsset" onchange="renderDocs()"></select>
+    </div>
+    <div class="f-group">
+      <span class="f-label">Category</span>
+      <select class="f-select" id="fCat" onchange="renderDocs()">
+        <option value="all">All categories</option>
+        <option>Title &amp; Registration</option>
+        <option>Insurance</option>
+        <option>Valuation Certificate</option>
+        <option>Certification</option>
+        <option>Service Record</option>
+        <option>Inspection Report</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <button class="f-clear" onclick="clearDocFilters()">Reset</button>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <div class="panel-title">Documents on File</div>
+      <div class="panel-note" id="docNote"></div>
+    </div>
+    <div class="table-scroll">
+      <table class="registry">
+        <thead>
+          <tr><th>Document</th><th>Vehicle</th><th>Category</th><th>Lodged</th><th>Custody</th><th></th></tr>
+        </thead>
+        <tbody id="docBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="foot"></div>
+</main>
+
+<!-- UPLOAD MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title">Lodge Document</div>
+        <div class="panel-note">Added to the vault against a vehicle under management</div>
+      </div>
+      <button class="drawer-close" onclick="closeModal()" aria-label="Close">✕</button>
+    </div>
+    <form id="docForm" onsubmit="saveDoc(event)">
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="field full"><label for="dAsset">Vehicle *</label><select id="dAsset" required></select></div>
+          <div class="field"><label for="dCat">Category *</label>
+            <select id="dCat" required>
+              <option>Title &amp; Registration</option>
+              <option>Insurance</option>
+              <option>Valuation Certificate</option>
+              <option>Certification</option>
+              <option>Service Record</option>
+              <option>Inspection Report</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="field"><label for="dFile">File *</label><input id="dFile" type="file" required accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" />
+          </div>
+          <div class="field full">
+            <div class="file-note">Files up to 1 MB are retained in this demonstration vault. Larger files are recorded by reference; production storage is encrypted object storage (Phase 2).</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn-outline" onclick="closeModal()">Cancel</button>
+        <button type="submit" class="btn-navy">Add to Vault</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast">Document lodged in the vault</div>
+
+<script src="assets/vault.js"></script>
+</body>
+</html>

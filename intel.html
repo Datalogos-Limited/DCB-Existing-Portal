@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Market Intelligence — Dream Car Brokers</title>
+<script>document.documentElement.dataset.theme = (function(){ try { return localStorage.getItem("dcb_theme") || "light"; } catch(e) { return "light"; } })();</script>
+<link rel="stylesheet" href="assets/dcb.css" />
+<script src="assets/store.js"></script>
+<script src="assets/chrome.js"></script>
+<style>
+  .intel-grid { display: grid; grid-template-columns: 1fr 320px; gap: 20px; align-items: start; }
+  @media (max-width: 1000px) { .intel-grid { grid-template-columns: 1fr; } }
+
+  .live-flag { display: inline-flex; align-items: center; gap: 7px; font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--pos); }
+  .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--pos); }
+
+  .feed-item { padding: 16px 22px; border-bottom: 1px solid var(--hairline); cursor: pointer; transition: background 0.12s; }
+  .feed-item:hover { background: var(--panel-tint); }
+  .feed-item:last-child { border-bottom: none; }
+  .feed-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; flex-wrap: wrap; }
+  .feed-title { font-family: var(--serif); font-size: 15px; line-height: 1.45; color: var(--ink); }
+  .feed-summary { font-size: 12px; color: var(--muted); line-height: 1.65; margin-top: 6px; }
+  .feed-hammer { font-size: 12px; font-weight: 700; color: var(--pos); margin-top: 8px; letter-spacing: 0.02em; }
+  .src-name { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); }
+  .src-time { font-size: 10px; color: var(--muted-2); letter-spacing: 0.04em; }
+
+  .rail-row { display: flex; align-items: baseline; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid var(--hairline); font-size: 12px; }
+  .rail-row:last-child { border-bottom: none; }
+  .rail-pad { padding: 14px 22px 18px; }
+
+  .cal-row { display: flex; gap: 14px; padding: 11px 0; border-bottom: 1px solid var(--hairline); }
+  .cal-row:last-child { border-bottom: none; }
+  .cal-date { width: 42px; flex-shrink: 0; text-align: center; border: 1px solid var(--hairline-dark); padding: 5px 2px; }
+  .cal-day { font-family: var(--serif); font-size: 16px; color: var(--gold); line-height: 1.1; }
+  .cal-month { font-size: 8px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  .cal-name { font-size: 12px; font-weight: 600; color: var(--ink); line-height: 1.35; }
+  .cal-loc { font-size: 10px; color: var(--muted); margin-top: 2px; }
+  .cal-est { font-size: 10px; color: var(--gold); font-weight: 700; margin-top: 2px; letter-spacing: 0.04em; }
+</style>
+</head>
+<body>
+
+<div id="chrome"></div>
+
+<main class="wrap">
+
+  <div class="page-head">
+    <div>
+      <div class="overline">Research &amp; Market Data</div>
+      <div class="page-title">Market Intelligence</div>
+      <div class="page-sub">Auction results, market reports and sector research relevant to vehicles under management.</div>
+    </div>
+    <div class="page-head-actions">
+      <span class="live-flag"><span class="live-dot"></span>Live Feed</span>
+      <button class="btn-outline" onclick="refreshFeed(this)">Refresh</button>
+    </div>
+  </div>
+
+  <!-- INDICES STRIP -->
+  <div class="stat-strip" style="margin-bottom:24px">
+    <div class="stat-cell"><div class="stat-lbl">Collector Market Rating</div><div class="stat-val">68.4</div><div class="stat-foot"><span class="pos">+1.2</span> this month — all-time high</div></div>
+    <div class="stat-cell"><div class="stat-lbl">Blue-Chip 60 Index</div><div class="stat-val">412.7</div><div class="stat-foot"><span class="pos">+8.1%</span> quarter on quarter</div></div>
+    <div class="stat-cell"><div class="stat-lbl">Sell-Through Rate</div><div class="stat-val">68%</div><div class="stat-foot">Trailing 90 days, major houses</div></div>
+    <div class="stat-cell"><div class="stat-lbl">Hammer Total — This Week</div><div class="stat-val">£284m</div><div class="stat-foot">Public auction, worldwide</div></div>
+  </div>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <div class="f-group" style="flex:1;min-width:180px">
+      <span class="f-label">Search</span>
+      <input class="f-input" id="fSearch" placeholder="Marque, model, topic…" oninput="renderFeed()" style="width:100%" />
+    </div>
+    <div class="f-group">
+      <span class="f-label">Type</span>
+      <select class="f-select" id="fType" onchange="renderFeed()">
+        <option value="all">All items</option>
+        <option value="auction_result">Auction results</option>
+        <option value="market_report">Market reports</option>
+        <option value="news">News</option>
+      </select>
+    </div>
+    <div class="f-group">
+      <span class="f-label">Source</span>
+      <select class="f-select" id="fSource" onchange="renderFeed()">
+        <option value="all">All sources</option>
+        <option value="bat">Bring a Trailer</option>
+        <option value="hagerty">Hagerty</option>
+        <option value="evo">Evo</option>
+      </select>
+    </div>
+    <button class="f-clear" onclick="clearIntelFilters()">Reset</button>
+  </div>
+
+  <div class="intel-grid">
+
+    <!-- FEED -->
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Intelligence Feed</div>
+        <div class="panel-note" id="feedNote"></div>
+      </div>
+      <div id="feedList"></div>
+    </div>
+
+    <!-- RIGHT RAIL -->
+    <div style="display:flex;flex-direction:column;gap:20px">
+
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">Auction Calendar</div></div>
+        <div class="rail-pad">
+          <div class="cal-row">
+            <div class="cal-date"><div class="cal-day">08</div><div class="cal-month">Aug</div></div>
+            <div><div class="cal-name">RM Sotheby's — Monterey</div><div class="cal-loc">Pebble Beach, California</div><div class="cal-est">92 lots · est. £310m</div></div>
+          </div>
+          <div class="cal-row">
+            <div class="cal-date"><div class="cal-day">14</div><div class="cal-month">Aug</div></div>
+            <div><div class="cal-name">Gooding &amp; Co. — Pebble Beach</div><div class="cal-loc">Monterey, California</div><div class="cal-est">68 lots · est. £240m</div></div>
+          </div>
+          <div class="cal-row">
+            <div class="cal-date"><div class="cal-day">05</div><div class="cal-month">Sep</div></div>
+            <div><div class="cal-name">Bonhams — Goodwood Revival</div><div class="cal-loc">West Sussex, United Kingdom</div><div class="cal-est">55 lots · est. £95m</div></div>
+          </div>
+          <div class="cal-row">
+            <div class="cal-date"><div class="cal-day">03</div><div class="cal-month">Oct</div></div>
+            <div><div class="cal-name">RM Sotheby's — London</div><div class="cal-loc">Marlborough House, London</div><div class="cal-est">48 lots · est. £120m</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">Marque Momentum</div><div class="panel-note">90-day price movement</div></div>
+        <div class="rail-pad">
+          <div class="rail-row"><span>Ferrari — classic era</span><span class="delta-pos">+8.2%</span></div>
+          <div class="rail-row"><span>Pagani</span><span class="delta-pos">+12.0%</span></div>
+          <div class="rail-row"><span>Bugatti — modern</span><span class="delta-pos">+5.1%</span></div>
+          <div class="rail-row"><span>Lamborghini — analogue</span><span class="delta-pos">+3.4%</span></div>
+          <div class="rail-row"><span>McLaren</span><span class="delta-flat">+0.2%</span></div>
+          <div class="rail-row"><span>Porsche — limited series</span><span class="delta-neg">−1.8%</span></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">Research Themes</div></div>
+        <div class="rail-pad">
+          <div class="rail-row"><span>Pre-war coachbuilt — renewed institutional interest</span></div>
+          <div class="rail-row"><span>Analogue-era supercars outperforming equities</span></div>
+          <div class="rail-row"><span>Japanese icons — 22% year-on-year advance</span></div>
+          <div class="rail-row"><span>Provenance premium widening at top of market</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="foot"></div>
+</main>
+
+<!-- ARTICLE DRAWER -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<aside class="drawer" id="drawer" aria-label="Article detail">
+  <div class="drawer-head">
+    <span class="drawer-ref" id="drawerRef">Intelligence Item</span>
+    <button class="drawer-close" onclick="closeDrawer()" aria-label="Close">✕</button>
+  </div>
+  <div class="drawer-body" id="drawerBody"></div>
+</aside>
+
+<script src="assets/intel.js"></script>
+</body>
+</html>

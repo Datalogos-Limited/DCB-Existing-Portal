@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Clients — Dream Car Brokers</title>
+<script>document.documentElement.dataset.theme = (function(){ try { return localStorage.getItem("dcb_theme") || "light"; } catch(e) { return "light"; } })();</script>
+<link rel="stylesheet" href="assets/dcb.css" />
+<script src="assets/store.js"></script>
+<script src="assets/chrome.js"></script>
+</head>
+<body>
+
+<div id="chrome"></div>
+
+<main class="wrap">
+
+  <div class="page-head">
+    <div>
+      <div class="overline">Relationships</div>
+      <div class="page-title">Client Mandates</div>
+      <div class="page-sub">Entities holding vehicles under management, with aggregate positions and compliance standing.</div>
+    </div>
+  </div>
+
+  <div class="stat-strip" id="statStrip" style="margin-bottom:24px"></div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <div class="panel-title">Mandate Register</div>
+      <div class="panel-note" id="mandateNote"></div>
+    </div>
+    <div class="table-scroll">
+      <table class="registry">
+        <thead>
+          <tr>
+            <th>Client Entity</th>
+            <th>Mandate Type</th>
+            <th>Domicile</th>
+            <th class="num">Vehicles</th>
+            <th class="num">Aggregate Valuation</th>
+            <th class="num">Unrealised Return</th>
+            <th class="num">Annual TCO</th>
+            <th>Compliance</th>
+          </tr>
+        </thead>
+        <tbody id="clientBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="foot"></div>
+</main>
+
+<script src="assets/clients.js"></script>
+</body>
+</html>

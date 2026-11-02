@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Overview — Dream Car Brokers</title>
+<script>document.documentElement.dataset.theme = (function(){ try { return localStorage.getItem("dcb_theme") || "light"; } catch(e) { return "light"; } })();</script>
+<link rel="stylesheet" href="assets/dcb.css" />
+<script src="vendor/cdn.jsdelivr.net/c389a6a6491c.js"></script>
+<script src="assets/store.js"></script>
+<script src="assets/chrome.js"></script>
+<style>
+  .grid-2 { display: grid; grid-template-columns: 340px 1fr; gap: 20px; align-items: start; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; margin-top: 20px; }
+  @media (max-width: 1000px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+  .donut-wrap { position: relative; display: flex; justify-content: center; padding: 22px 0 8px; }
+  .donut-wrap canvas { max-width: 190px !important; max-height: 190px !important; }
+  .donut-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -46%); text-align: center; pointer-events: none; }
+  .donut-val { font-family: var(--serif); font-size: 22px; }
+  .donut-lbl { font-size: 8px; letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase; }
+
+  .alloc-rows { padding: 6px 22px 18px; }
+  .alloc-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--hairline); font-size: 12px; }
+  .alloc-row:last-child { border-bottom: none; }
+  .alloc-name { display: flex; align-items: center; gap: 10px; color: var(--ink-2); }
+  .alloc-swatch { width: 8px; height: 8px; }
+  .alloc-pct { font-family: var(--serif); color: var(--ink); }
+
+  .intel-row { display: flex; gap: 14px; padding: 13px 22px; border-bottom: 1px solid var(--hairline); }
+  .intel-row:last-child { border-bottom: none; }
+  .intel-marker { width: 3px; align-self: stretch; flex-shrink: 0; }
+  .intel-head { font-size: 12px; font-weight: 600; color: var(--ink); line-height: 1.45; }
+  .intel-src { font-size: 10px; color: var(--muted); margin-top: 3px; letter-spacing: 0.04em; }
+
+  .watch-row { padding: 14px 22px; border-bottom: 1px solid var(--hairline); display: flex; align-items: baseline; justify-content: space-between; gap: 14px; }
+  .watch-row:last-child { border-bottom: none; }
+  .watch-name { font-size: 12px; font-weight: 600; color: var(--ink); }
+  .watch-meta { font-size: 10px; color: var(--muted); margin-top: 3px; letter-spacing: 0.03em; }
+  .watch-price { font-family: var(--serif); font-size: 16px; white-space: nowrap; }
+
+  .chart-wrap { padding: 20px 22px; height: 230px; }
+  .time-links { display: flex; gap: 2px; }
+  .time-link {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
+    padding: 5px 10px; color: var(--muted); background: none; border: none;
+    border-bottom: 2px solid transparent; cursor: pointer; font-family: var(--sans);
+  }
+  .time-link:hover { color: var(--ink); }
+  .time-link.active { color: var(--navy); border-bottom-color: var(--gold); }
+</style>
+</head>
+<body>
+
+<div id="chrome"></div>
+
+<main class="wrap">
+
+  <div class="page-head">
+    <div>
+      <div class="overline">Portfolio Overview</div>
+      <div class="page-title">Good morning, Kiran</div>
+      <div class="page-sub" id="pageDate"></div>
+    </div>
+    <div class="page-head-actions">
+      <a class='btn-outline' href='reports.html' style='text-decoration:none'>Portfolio Statement</a>
+      <a class='btn-navy' href='portfolio.html?add=1' style='text-decoration:none'>Register Asset</a>
+    </div>
+  </div>
+
+  <!-- STAT STRIP -->
+  <div class="stat-strip" id="statStrip" style="margin-bottom:24px"></div>
+
+  <!-- ROW: ALLOCATION + HOLDINGS -->
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Allocation by Marque</div>
+        <div class="panel-note">Share of valuation</div>
+      </div>
+      <div class="donut-wrap">
+        <canvas id="donutChart" width="190" height="190"></canvas>
+        <div class="donut-center">
+          <div class="donut-val" id="donutBrands">—</div>
+          <div class="donut-lbl">Marques</div>
+        </div>
+      </div>
+      <div class="alloc-rows" id="allocRows"></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Principal Holdings</div>
+        <a class='panel-note' href='portfolio.html' style='text-decoration:none;color:var(--gold);font-weight:700;letter-spacing:0.1em;text-transform:uppercase'>Full register →</a>
+      </div>
+      <div class="table-scroll">
+        <table class="registry">
+          <thead>
+            <tr>
+              <th>Asset</th><th>Client</th><th class="num">Valuation</th><th class="num">Return</th><th class="num">Annual TCO</th><th>Title</th>
+            </tr>
+          </thead>
+          <tbody id="holdingsBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW: MARKET WATCH + INTEL -->
+  <div class="grid-3">
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Market Watch</div>
+        <div class="panel-note">Upcoming lots of relevance</div>
+      </div>
+      <div>
+        <div class="watch-row">
+          <div>
+            <div class="watch-name">2022 Bugatti Chiron Super Sport 300+</div>
+            <div class="watch-meta">RM Sotheby's · Auction 8 June · Estimate</div>
+          </div>
+          <div class="watch-price">£3.2m</div>
+        </div>
+        <div class="watch-row">
+          <div>
+            <div class="watch-name">1987 Ferrari F40 — Pre-Production</div>
+            <div class="watch-meta">Bring a Trailer · Closes in 2 days · Current bid</div>
+          </div>
+          <div class="watch-price">£1.9m</div>
+        </div>
+        <div class="watch-row">
+          <div>
+            <div class="watch-name">2005 Pagani Zonda C12 S</div>
+            <div class="watch-meta">Gooding &amp; Co. · Private treaty · Guide</div>
+          </div>
+          <div class="watch-price">£2.8m</div>
+        </div>
+        <div class="watch-row">
+          <div>
+            <div class="watch-name">1962 Ferrari 250 GT SWB</div>
+            <div class="watch-meta">Bonhams · Goodwood, 21 June · Estimate</div>
+          </div>
+          <div class="watch-price">£8.5m</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Market Intelligence</div>
+        <a class='panel-note' href='intel.html' style='text-decoration:none;color:var(--gold);font-weight:700;letter-spacing:0.1em;text-transform:uppercase'>Live feed →</a>
+      </div>
+      <div>
+        <div class="intel-row">
+          <div class="intel-marker" style="background:var(--gold)"></div>
+          <div>
+            <div class="intel-head">Ferrari 250 GTO exceeds £50m at Villa d'Este — European public-auction record</div>
+            <div class="intel-src">Hagerty · 2 hours ago</div>
+          </div>
+        </div>
+        <div class="intel-row">
+          <div class="intel-marker" style="background:var(--navy)"></div>
+          <div>
+            <div class="intel-head">Q1 2026 auction data: Japanese collectibles advance 22% year on year</div>
+            <div class="intel-src">Bring a Trailer · 5 hours ago</div>
+          </div>
+        </div>
+        <div class="intel-row">
+          <div class="intel-marker" style="background:var(--gold)"></div>
+          <div>
+            <div class="intel-head">Tourbillon programme delays lift pre-owned Chiron values 12%</div>
+            <div class="intel-src">Evo · yesterday</div>
+          </div>
+        </div>
+        <div class="intel-row">
+          <div class="intel-marker" style="background:var(--navy)"></div>
+          <div>
+            <div class="intel-head">Pre-war Bentley demand strengthens among Asian family offices</div>
+            <div class="intel-src">RM Sotheby's · 2 days ago</div>
+          </div>
+        </div>
+        <div class="intel-row">
+          <div class="intel-marker" style="background:var(--gold)"></div>
+          <div>
+            <div class="intel-head">Collector index reaches all-time high; sell-through rates firm at 68%</div>
+            <div class="intel-src">Hagerty · 3 days ago</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRICE HISTORY -->
+  <div class="panel" style="margin-top:20px">
+    <div class="panel-head">
+      <div>
+        <div class="panel-title">Reference Asset — Ferrari Enzo (2003)</div>
+        <div class="panel-note">Indicative market value, GBP thousands</div>
+      </div>
+      <div class="time-links">
+        <button class="time-link" onclick="setRange('1Y', this)">1Y</button>
+        <button class="time-link" onclick="setRange('3Y', this)">3Y</button>
+        <button class="time-link" onclick="setRange('5Y', this)">5Y</button>
+        <button class="time-link active" onclick="setRange('10Y', this)">10Y</button>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="historyChart"></canvas></div>
+  </div>
+
+  <div id="foot"></div>
+</main>
+
+<script src="assets/overview.js"></script>
+</body>
+</html>

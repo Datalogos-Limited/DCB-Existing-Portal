@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Concierge — Dream Car Brokers</title>
+<script>document.documentElement.dataset.theme = (function(){ try { return localStorage.getItem("dcb_theme") || "light"; } catch(e) { return "light"; } })();</script>
+<link rel="stylesheet" href="assets/dcb.css" />
+<script src="assets/store.js"></script>
+<script src="assets/chrome.js"></script>
+<style>
+  .svc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media (max-width: 1000px) { .svc-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 640px) { .svc-grid { grid-template-columns: 1fr; } }
+
+  .svc-card { background: var(--panel); border: 1px solid var(--hairline); padding: 24px; display: flex; flex-direction: column; gap: 10px; }
+  .svc-num { font-family: var(--serif); font-size: 13px; color: var(--gold); }
+  .svc-title { font-family: var(--serif); font-size: 17px; color: var(--ink); }
+  .svc-desc { font-size: 12px; color: var(--muted); line-height: 1.65; flex: 1; }
+  .svc-link {
+    align-self: flex-start;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--navy); background: none; border: none; border-bottom: 1px solid var(--gold);
+    padding: 0 0 3px; cursor: pointer; font-family: var(--sans);
+  }
+  :root[data-theme="dark"] .svc-link { color: var(--ink); }
+  .svc-link:hover { color: var(--gold); }
+</style>
+</head>
+<body>
+
+<div id="chrome"></div>
+
+<main class="wrap">
+
+  <div class="page-head">
+    <div>
+      <div class="overline">Private Client Services</div>
+      <div class="page-title">Concierge Desk</div>
+      <div class="page-sub">Instructions are acknowledged within one business hour and handled by your relationship manager.</div>
+    </div>
+  </div>
+
+  <div class="svc-grid">
+    <div class="svc-card">
+      <div class="svc-num">01</div>
+      <div class="svc-title">Formal Valuation</div>
+      <div class="svc-desc">Commission a formal written appraisal of any vehicle under management, prepared for insurance, probate, or lending purposes and countersigned by an independent specialist.</div>
+      <button class="svc-link" onclick="openRequest('Formal Valuation')">Instruct →</button>
+    </div>
+    <div class="svc-card">
+      <div class="svc-num">02</div>
+      <div class="svc-title">Enclosed Transport</div>
+      <div class="svc-desc">Fully enclosed, air-ride transport with GPS tracking and specie-level insurance, arranged door to door in the United Kingdom, Europe, the Gulf, and North America.</div>
+      <button class="svc-link" onclick="openRequest('Enclosed Transport')">Instruct →</button>
+    </div>
+    <div class="svc-card">
+      <div class="svc-num">03</div>
+      <div class="svc-title">Auction Consignment</div>
+      <div class="svc-desc">Discreet consignment to the appropriate house and sale — estimate negotiation, reserve strategy, catalogue placement, and settlement handled on your behalf.</div>
+      <button class="svc-link" onclick="openRequest('Auction Consignment')">Instruct →</button>
+    </div>
+    <div class="svc-card">
+      <div class="svc-num">04</div>
+      <div class="svc-title">Insurance Review</div>
+      <div class="svc-desc">Annual review of agreed-value cover across the portfolio, benchmarked against current valuations to eliminate under-insurance and duplicate premium.</div>
+      <button class="svc-link" onclick="openRequest('Insurance Review')">Instruct →</button>
+    </div>
+    <div class="svc-card">
+      <div class="svc-num">05</div>
+      <div class="svc-title">Storage Placement</div>
+      <div class="svc-desc">Placement in climate-controlled, bonded storage with battery conditioning, periodic exercise programmes, and quarterly condition reporting.</div>
+      <button class="svc-link" onclick="openRequest('Storage Placement')">Instruct →</button>
+    </div>
+    <div class="svc-card">
+      <div class="svc-num">06</div>
+      <div class="svc-title">Acquisition Search</div>
+      <div class="svc-desc">A private search mandate for a specific motor car — including off-market examples — with provenance verification and pre-purchase inspection before any offer is made.</div>
+      <button class="svc-link" onclick="openRequest('Acquisition Search')">Instruct →</button>
+    </div>
+    <div class="svc-card">
+      <div class="svc-num">07</div>
+      <div class="svc-title">Diagnostic Assessment</div>
+      <div class="svc-desc">A full assessment of the vehicle's mechanical, electrical, and electronic systems by a marque specialist, with a written report lodged in the Document Vault and the asset file updated.</div>
+      <button class="svc-link" onclick="openRequest('Diagnostic Assessment')">Instruct →</button>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top:24px">
+    <div class="panel-head">
+      <div class="panel-title">Instruction Log</div>
+      <div class="panel-note" id="logNote"></div>
+    </div>
+    <div class="table-scroll">
+      <table class="registry">
+        <thead>
+          <tr><th>Reference</th><th>Service</th><th>Vehicle</th><th>Submitted</th><th>Status</th><th></th></tr>
+        </thead>
+        <tbody id="logBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="foot"></div>
+</main>
+
+<!-- REQUEST MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title" id="reqTitle">Instruction</div>
+        <div class="panel-note">Handled by your relationship manager</div>
+      </div>
+      <button class="drawer-close" onclick="closeModal()" aria-label="Close">✕</button>
+    </div>
+    <form id="reqForm" onsubmit="submitRequest(event)">
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="field full"><label for="rVehicle">Vehicle</label>
+            <select id="rVehicle"></select>
+          </div>
+          <div class="field full"><label for="rNotes">Instructions</label>
+            <textarea id="rNotes" placeholder="Timing, destination, sale preference, or any other requirements…"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn-outline" onclick="closeModal()">Cancel</button>
+        <button type="submit" class="btn-navy">Submit Instruction</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast">Instruction received — reference assigned</div>
+
+<script src="assets/concierge.js"></script>
+</body>
+</html>
